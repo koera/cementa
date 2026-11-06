@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelled.emit()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{ isEdit ? 'Edit category' : 'New budget category' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form">
+    <div class="field">
+      <label for="name">Category name</label>
+      <input id="name" class="in" type="text" placeholder="e.g. Materials" [(ngModel)]="name" />
+    </div>
+
+    <div class="field">
+      <label for="budget">Budget amount (€)</label>
+      <input
+        id="budget"
+        class="in big"
+        type="number"
+        inputmode="decimal"
+        step="0.01"
+        min="0"
+        placeholder="0.00"
+        [(ngModel)]="budget"
+      />
+    </div>
+
+    <p class="hint">Spent so far is calculated from your expenses in this category.</p>
+
+    <div class="field">
+      <label id="color-label">Color</label>
+      <div class="swatches" role="radiogroup" aria-labelledby="color-label">
+        @for (c of colors; track c.value) {
+          <button
+            type="button"
+            class="swatch"
+            role="radio"
+            [class.on]="c.value === color"
+            [attr.aria-checked]="c.value === color"
+            [attr.aria-label]="c.label"
+            [style.background]="c.value"
+            (click)="color = c.value"
+          ></button>
+        }
+        <label class="swatch custom" [class.on]="isCustom" [style.background]="isCustom ? color : null">
+          <input type="color" aria-label="Custom color" [value]="color" (input)="color = $any($event.target).value" />
+        </label>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <div class="footer">
+      <ion-button color="primary" expand="block" [disabled]="!canSave" (click)="save()"> Save category </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

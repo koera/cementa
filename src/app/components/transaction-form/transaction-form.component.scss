@@ -1,0 +1,49 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+ion-content { --background: #F7F3EC; }
+
+.form { display: flex; flex-direction: column; gap: 18px; }
+.seg  { display: flex; gap: 8px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: 600; color: #5B6670; }
+
+.in {
+  height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border: 1px solid #D5CDBD;
+  border-radius: 12px;
+  background: #fff;
+  color: #1F2933;
+  font: inherit;
+  &.big { height: 64px; font-size: 32px; font-weight: 700; }
+}
+
+.in-select {
+  --padding-start: 14px;
+  --padding-end: 14px;
+  min-height: 48px;
+  border: 1px solid #D5CDBD;
+  border-radius: 12px;
+  background: #fff;
+  color: #1F2933;
+}
+
+.chip {
+  flex: 1;
+  height: 44px;
+  border-radius: 22px;
+  border: 1px solid #D5CDBD;
+  background: #fff;
+  color: #1F2933;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  &.on { background: #1F2933; color: #F7F3EC; border-color: #1F2933; }
+}
+
+.footer { padding: 12px 20px 8px; }

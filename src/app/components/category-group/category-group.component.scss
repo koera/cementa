@@ -1,0 +1,21 @@
+:host { display: block; }
+
+.title {
+  margin: 0;
+  padding: 14px 20px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5B6670;
+}
+
+.card {
+  margin: 0 20px;
+  background: #fff;
+  border: 1px solid #E5DFD3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+app-category-item + app-category-item {
+  border-top: 1px solid #EFE9DD;
+}

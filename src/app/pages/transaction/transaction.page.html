@@ -1,0 +1,50 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="summary">
+    <div class="summary-content">
+      <div class="brand">CEMENTA</div>
+      <div class="label">Balance</div>
+      <div class="balance">{{ balance | currency:'EUR' }}</div>
+      <div class="totals">
+        <span>Income +{{ income | currency:'EUR':'symbol':'1.0-0' }}</span>
+        <span>Expenses −{{ expenses | currency:'EUR':'symbol':'1.0-0' }}</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <app-transaction-filters
+    [accounts]="accounts"
+    [selectedAccountId]="selectedAccountId"
+    [months]="months"
+    [selectedMonth]="selectedMonth"
+    [categories]="categories"
+    [selectedCategory]="selectedCategory"
+    (accountChange)="onAccountChange($event)"
+    (monthChange)="onMonthChange($event)"
+    (categoryChange)="onCategoryChange($event)"
+    (exportPdf)="exportPdf()"
+  >
+  </app-transaction-filters>
+  @for (g of groups; track g.date) {
+  <app-transaction-group
+    [date]="g.date"
+    [transactions]="g.items"
+    (select)="onSelectTransaction($event)" />
+}
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab-button color="primary" aria-label="Add transaction" (click)="isFormOpen = true">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-modal [isOpen]="isFormOpen" (didDismiss)="isFormOpen = false">
+  <ng-template>
+    <app-transaction-form
+      [accounts]="formAccounts"
+      [categories]="formCategories"
+      (cancelled)="isFormOpen = false"
+      (saved)="onSaveTransaction($event)" />
+  </ng-template>
+</ion-modal>
+</ion-content>

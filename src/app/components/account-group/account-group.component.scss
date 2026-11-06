@@ -1,0 +1,40 @@
+:host { display: block; }
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5B6670;
+}
+
+.manage {
+  min-height: 44px;
+  margin: -12px 0;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1F2933;
+  text-decoration: underline;
+}
+
+.card {
+  margin: 0 20px;
+  background: #fff;
+  border: 1px solid #E5DFD3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+app-account-item + app-account-item {
+  border-top: 1px solid #EFE9DD;
+}

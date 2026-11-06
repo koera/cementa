@@ -1,0 +1,10 @@
+<button class="item" (click)="accountSelect.emit(account)">
+  <span class="info">
+    <span class="name">{{ account.name }}</span>
+    <span class="sub">{{ subtitle }}</span>
+  </span>
+  <span class="right">
+    <span class="amt">{{ account.balance / 100 | currency:'EUR' }}</span>
+    <span class="chev" aria-hidden="true">›</span>
+  </span>
+</button>

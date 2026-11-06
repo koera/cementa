@@ -1,0 +1,69 @@
+.row {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.chip {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: 1px solid #D5CDBD;
+  background: #fff;
+  color: #1F2933;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &.on {
+    background: #1F2933;
+    color: #F7F3EC;
+    border-color: #1F2933;
+  }
+
+  &.pdf {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #F59E0B;
+    border-color: #F59E0B;
+    font-weight: 700;
+  }
+}
+.chip-select {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 14px;
+  --padding-end: 10px;
+
+  flex: 0 0 auto;
+  width: auto;
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid #D5CDBD;
+  border-radius: 18px;
+  background: #fff;
+  color: #1F2933;
+  font-size: 14px;
+  font-weight: 500;
+
+  &::part(container) {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  &::part(text) {
+    line-height: 1;
+  }
+
+  &::part(icon) {
+    align-self: center;
+    margin-inline-start: 6px;
+    opacity: 1;
+    color: #5B6670;
+  }
+}

@@ -1,0 +1,47 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelled.emit()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{ isEdit ? 'Edit account' : 'New account' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form">
+    <div class="field">
+      <label for="name">Account name</label>
+      <input id="name" class="in" type="text" placeholder="e.g. Bank" [(ngModel)]="name">
+    </div>
+
+    <div class="field">
+      <label id="type-label">Type</label>
+      <div class="seg" role="group" aria-labelledby="type-label">
+        <button type="button" class="chip" [class.on]="type === 'bank'"
+                [attr.aria-pressed]="type === 'bank'" (click)="type = 'bank'">Bank</button>
+        <button type="button" class="chip" [class.on]="type === 'cash'"
+                [attr.aria-pressed]="type === 'cash'" (click)="type = 'cash'">Cash</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="opening">Opening balance (€)</label>
+      <input id="opening" class="in big" type="number" inputmode="decimal"
+             step="0.01" placeholder="0.00" [(ngModel)]="opening">
+    </div>
+
+    <p class="hint">
+      The opening balance is what the account holds before your first transaction here.
+    </p>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <div class="footer">
+      <ion-button color="primary" expand="block" [disabled]="!canSave" (click)="save()">
+        Save account
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

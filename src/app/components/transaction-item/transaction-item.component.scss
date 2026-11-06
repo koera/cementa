@@ -1,0 +1,21 @@
+:host { display: block; }
+
+ion-item {
+  --background: transparent;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --min-height: 44px;
+  --color: #1F2933;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 0;
+}
+.info { display: flex; flex-direction: column; gap: 2px; }
+.name { font-weight: 600; font-size: 16px; }
+.sub  { font-size: 13px; color: #5B6670; }
+.amt  { font-weight: 700; font-size: 16px; &.income { color: #17694B; } }

@@ -1,0 +1,35 @@
+.nav { --padding-bottom: 0; }
+ion-back-button { --color: #F7F3EC; }
+
+.title { margin-top: 6px; font-size: 28px; font-weight: 700; }
+
+ion-content { --background: #F7F3EC; }
+
+.head {
+  margin: 0;
+  padding: 14px 20px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5B6670;
+}
+
+.card {
+  margin: 0 20px;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #E5DFD3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --min-height: 44px;
+}
+
+app-account-item { width: 100%; }
+
+.hint { margin: 0; padding: 12px 20px 0; font-size: 13px; color: #5B6670; }
+.add  { padding: 8px 20px; }

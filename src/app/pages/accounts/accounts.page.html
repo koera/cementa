@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="summary nav">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab2" text="Back"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar class="summary">
+    <div class="summary-content">
+      <div class="brand">BUDGETS</div>
+      <div class="title">Accounts</div>
+      <div class="label">Total across accounts</div>
+      <div class="balance">{{ total / 100 | currency:'EUR' }}</div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h3 class="head">Your accounts ({{ accounts.length }})</h3>
+
+  <ion-list class="card" lines="none">
+    @for (a of accounts; track a.id) {
+      <ion-item-sliding #slider>
+        <ion-item lines="none" detail="false">
+          <app-account-item
+            [account]="a"
+            [subtitle]="'Opening balance ' + ((a.openingBalance ?? 0) / 100 | currency:'EUR')"
+            (accountSelect)="openForm(a)" />
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="onDelete(a, slider)">
+            <ion-icon slot="top" name="trash-outline"></ion-icon>
+            Delete
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
+  </ion-list>
+
+  <p class="hint">Tap an account to edit it, or swipe left to delete it.</p>
+
+  <div class="add">
+    <ion-button expand="block" fill="outline" color="dark"
+                [disabled]="accounts.length >= maxAccounts" (click)="openForm(null)">
+      + Add account
+    </ion-button>
+    @if (accounts.length >= maxAccounts) {
+      <p class="hint">You can have up to {{ maxAccounts }} accounts.</p>
+    }
+  </div>
+
+  <ion-modal [isOpen]="isFormOpen" (didDismiss)="isFormOpen = false">
+    <ng-template>
+      <app-account-form
+        [account]="editingAccount"
+        (cancelled)="isFormOpen = false"
+        (saved)="onSave($event)" />
+    </ng-template>
+  </ion-modal>
+</ion-content>

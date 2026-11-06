@@ -1,0 +1,39 @@
+:host { display: block; }
+
+ion-item {
+  --background: transparent;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --min-height: 44px;
+  --color: #1F2933;
+}
+
+.content { width: 100%; padding: 12px 0; }
+.top     { display: flex; justify-content: space-between; }
+.name { font-weight: 600; }
+.sub  { font-size: 13px; color: #5B6670; }
+
+.bar {
+  display: block;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 4px;
+  background: #E5DFD3;
+
+  i {
+    display: block;
+    height: 8px;
+    border-radius: 4px;
+    &.ok   { background: #1F2933; }
+    &.warn { background: #F59E0B; }
+    &.over { background: #B42318; }
+  }
+}
+
+.left {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #5B6670;
+  &.over { font-weight: 700; color: #B42318; }
+}

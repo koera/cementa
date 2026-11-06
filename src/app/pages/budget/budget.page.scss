@@ -1,0 +1,23 @@
+.title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.spent {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.bar {
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 4px;
+  background: #3E4B57;
+
+  i {
+    display: block;
+    height: 8px;
+    border-radius: 4px;
+    background: #F59E0B;
+  }
+}

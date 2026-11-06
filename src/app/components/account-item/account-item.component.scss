@@ -1,0 +1,22 @@
+:host { display: block; }
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 0;
+  background: none;
+  text-align: left;
+  color: #1F2933;
+  font: inherit;
+}
+
+.info  { display: flex; flex-direction: column; gap: 2px; }
+.name  { font-weight: 600; font-size: 16px; }
+.sub   { font-size: 13px; color: #5B6670; }
+.right { display: flex; align-items: center; gap: 8px; }
+.amt   { font-weight: 700; font-size: 16px; }
+.chev  { color: #5B6670; font-size: 20px; }

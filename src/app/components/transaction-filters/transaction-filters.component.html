@@ -1,0 +1,41 @@
+<div class="row">
+  @for (a of accounts; track a.id) {
+    <button
+      class="chip"
+      [class.on]="a.id === selectedAccountId"
+      (click)="accountChange.emit(a.id)">
+      {{ a.name }}
+    </button>
+  }
+</div>
+
+<div class="row">
+  <ion-select
+    class="chip-select"
+    aria-label="Month"
+    interface="popover"
+    [value]="selectedMonth"
+    toggleIcon="chevron-down"
+    (ionChange)="monthChange.emit($event.detail.value)">
+    @for (m of months; track m.value) {
+      <ion-select-option [value]="m.value">{{ m.label }}</ion-select-option>
+    }
+  </ion-select>
+
+  <ion-select
+    class="chip-select"
+    aria-label="Category"
+    interface="popover"
+    [value]="selectedCategory"
+    toggleIcon="chevron-down"
+    (ionChange)="categoryChange.emit($event.detail.value)">
+    @for (c of categories; track c.value) {
+      <ion-select-option [value]="c.value">{{ c.label }}</ion-select-option>
+    }
+  </ion-select>
+
+  <button class="chip pdf" (click)="exportPdf.emit()">
+    <ion-icon name="download-outline"></ion-icon>
+    PDF
+  </button>
+</div>

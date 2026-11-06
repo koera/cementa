@@ -1,0 +1,9 @@
+<div class="head">
+  <h3 class="title">{{ title }} ({{ accounts.length }})</h3>
+  <button class="manage" (click)="manage.emit()">Manage</button>
+</div>
+<div class="card">
+  @for (a of accounts; track a.id) {
+    <app-account-item [account]="a" (accountSelect)="accountSelect.emit($event)" />
+  }
+</div>

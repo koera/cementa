@@ -1,0 +1,39 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="summary">
+    <div class="summary-content">
+      <div class="title">Budgets</div>
+      <div class="spent">
+        Spent {{ spent | currency:'EUR':'symbol':'1.0-0' }} of {{ budget | currency:'EUR':'symbol':'1.0-0' }}
+      </div>
+      <div
+        class="bar"
+        role="progressbar"
+        aria-label="Budget used"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [attr.aria-valuenow]="percent"
+      >
+        <i [style.width.%]="percent"></i>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-category-group [categories]="categories" (categorySelect)="onCategorySelect($event)" />
+  <app-account-group [accounts]="accounts" (accountSelect)="openAccounts()" (manage)="openAccounts()" />
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="primary" aria-label="Add category" (click)="isCategoryFormOpen = true">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-modal [isOpen]="isCategoryFormOpen" (didDismiss)="isCategoryFormOpen = false">
+    <ng-template>
+      <app-category-form
+        [category]="editingCategory"
+        (cancelled)="isCategoryFormOpen = false"
+        (saved)="onSaveCategory($event)"
+      />
+    </ng-template>
+  </ion-modal>
+</ion-content>

@@ -1,0 +1,6 @@
+<h3 class="title">{{ title }}</h3>
+<div class="card">
+  @for (c of categories; track c.id) {
+    <app-category-item [category]="c" (categorySelect)="categorySelect.emit($event)" />
+  }
+</div>

@@ -1,0 +1,33 @@
+<ion-item-sliding #slider>
+  <ion-item lines="none" button detail="false" (click)="categorySelect.emit(category)">
+    <div class="content">
+      <div class="top">
+        <span class="name">{{ category.name }}</span>
+        <span class="sub">
+          {{ category.spent / 100 | currency:'EUR':'symbol':'1.0-0' }} /
+          {{ category.budget / 100 | currency:'EUR':'symbol':'1.0-0' }}
+        </span>
+      </div>
+
+      <div class="bar" role="progressbar" [attr.aria-label]="category.name + ' budget used'"
+           aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="percent">
+        <i [class]="state" [style.width.%]="percent"></i>
+      </div>
+
+      <div class="left" [class.over]="isOver">
+        @if (isOver) {
+          {{ -remaining / 100 | currency:'EUR':'symbol':'1.0-0' }} over
+        } @else {
+          {{ remaining / 100 | currency:'EUR':'symbol':'1.0-0' }} left
+        }
+      </div>
+    </div>
+  </ion-item>
+
+  <ion-item-options side="end">
+    <ion-item-option color="danger" (click)="onDelete(slider)">
+      <ion-icon slot="top" name="trash-outline"></ion-icon>
+      Delete
+    </ion-item-option>
+  </ion-item-options>
+</ion-item-sliding>
