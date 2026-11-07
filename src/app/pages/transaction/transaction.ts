@@ -22,6 +22,7 @@ import { TransactionService } from '../../services/transaction.service';
 import { AccountService } from '../../services/account.service';
 import { CategoryService } from '../../services/category.service';
 import { Option } from '../../models/option.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-transaction',
@@ -46,6 +47,8 @@ export class TransactionPage implements OnInit {
   private accountService = inject(AccountService);
   private categoryService = inject(CategoryService);
   private alertController = inject(AlertController);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   selectedMonth = 'all';
   selectedAccountId: number | null = null;
@@ -84,7 +87,11 @@ export class TransactionPage implements OnInit {
   async ngOnInit() {
     await Promise.all([this.accountService.load(), this.categoryService.load()]);
     this.months.set(await this.transactionService.months());
-    await this.reload();
+    this.route.queryParamMap.subscribe((p) => {
+      const id = p.get('accountId');
+      this.selectedAccountId = id ? Number(id) : null;
+      this.reload();
+    });
   }
 
   get balance() {
@@ -100,8 +107,7 @@ export class TransactionPage implements OnInit {
   }
 
   onAccountChange(id: number | null) {
-    this.selectedAccountId = id;
-    this.reload();
+    this.router.navigate([], { queryParams: { accountId: id }, replaceUrl: true });
   }
   onMonthChange(v: string) {
     this.selectedMonth = v;

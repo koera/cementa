@@ -75,9 +75,6 @@ export class AccountsPage implements OnInit {
   }
 
   async onSave(n: NewAccount) {
-    // await this.accountService.save(n);
-    // this.isFormOpen = false;
-    // onsole.log('save clicked', n);
     try {
       await this.accountService.save(n);
       this.isFormOpen = false;

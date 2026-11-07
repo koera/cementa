@@ -25,7 +25,7 @@
     (categorySelect)="openCategoryForm($event)"
     (categoryDelete)="onCategoryDelete($event)"
   />
-  <app-account-group [accounts]="accounts()" (accountSelect)="openAccounts()" (manage)="openAccounts()" />
+  <app-account-group [accounts]="accounts()" (accountSelect)="openAccountTransactions($event)" (manage)="openAccounts()" />
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button color="primary" aria-label="Add category" (click)="openCategoryForm()">
       <ion-icon name="add"></ion-icon>

@@ -20,6 +20,7 @@ import { AccountGroupComponent } from '../../components/account-group/account-gr
 import { CategoryFormComponent } from '../../components/category-form/category-form.component';
 import { AccountService } from '../../services/account.service';
 import { CategoryService } from '../../services/category.service';
+import { AccountBalance } from '../../models/account.model';
 
 @Component({
   selector: 'app-budget',
@@ -70,7 +71,11 @@ export class BudgetPage implements OnInit {
     await Promise.all([this.categoryService.load(), this.accountService.load()]);
   }
 
-  openAccounts() {
+  openAccountTransactions(accountBalance: AccountBalance) {
+      this.router.navigate(['/tabs/transaction'], { queryParams: { accountId: accountBalance.id } });
+  }
+
+  openAccounts(){
     this.router.navigate(['/accounts']);
   }
 
