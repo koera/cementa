@@ -8,6 +8,7 @@ import {
   IonHeader,
   IonSelect,
   IonSelectOption,
+  IonSpinner,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
@@ -30,6 +31,7 @@ import { NewTxn } from '../../models/transaction.model';
     IonFooter,
     IonSelect,
     IonSelectOption,
+    IonSpinner
   ],
 })
 export class TransactionFormComponent implements OnInit {
@@ -38,6 +40,8 @@ export class TransactionFormComponent implements OnInit {
 
   @Output() saved = new EventEmitter<NewTxn>();
   @Output() cancelled = new EventEmitter<void>();
+
+  @Input() saving = false;
 
   type: 'income' | 'expense' = 'expense';
   amount: number | null = null;
@@ -69,7 +73,7 @@ export class TransactionFormComponent implements OnInit {
   }
 
   save() {
-    if (!this.canSave) return;
+    if (!this.canSave || this.saving) return;
     this.saved.emit({
       type: this.type,
       amountCents: Math.round(this.amount! * 100),

@@ -1,6 +1,6 @@
 <h3 class="date">{{ date | date: 'EEE d MMM' }}</h3>
-<div class="card">
+<ion-list class="card">
   @for (t of transactions; track t.id) {
     <app-transaction-item [txn]="t" (select)="select.emit($event)" (txnDelete)="txnDelete.emit($event)" />
   }
-</div>
+</ion-list>

@@ -1,6 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  ModalController,
+  IonSpinner,
+} from '@ionic/angular';
 import { CategoryBudget, NewCategory } from '../../models/category.model';
 import { addIcons } from 'ionicons';
 import { trashOutline } from 'ionicons/icons';
@@ -9,17 +19,20 @@ import { trashOutline } from 'ionicons/icons';
   selector: 'app-category-form',
   templateUrl: './category-form.component.html',
   styleUrls: ['./category-form.component.scss'],
-  imports: [FormsModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonFooter],
+  imports: [FormsModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonFooter, IonSpinner],
 })
 export class CategoryFormComponent implements OnInit {
+  private modalController = inject(ModalController);
+
   constructor() {
     addIcons({ trashOutline });
   }
-  /** Pass a category to edit it; leave empty to create one. */
-  @Input() category: CategoryBudget | null = null;
 
-  @Output() saved = new EventEmitter<NewCategory>();
-  @Output() cancelled = new EventEmitter<void>();
+  @Input() category: CategoryBudget | null = null;
+  @Input({ required: true }) onSave!: (n: NewCategory) => Promise<void>;
+
+  saving = false;
+  failed = false;
 
   readonly colors = [
     { value: '#F59E0B', label: 'Amber' },
@@ -53,14 +66,27 @@ export class CategoryFormComponent implements OnInit {
     return !this.colors.some((c) => c.value.toLowerCase() === this.color.toLowerCase());
   }
 
-  save() {
-    if (!this.canSave) return;
-    this.saved.emit({
-      id: this.category?.id,
-      name: this.name.trim(),
-      budgetCents: Math.round(this.budget! * 100),
-      color: this.color,
-    });
+  cancel() {
+    this.modalController.dismiss(null, 'cancel');
   }
-  
+
+  async save() {
+    if (!this.canSave || this.saving) return;
+    this.saving = true;
+    this.failed = false;
+    try {
+      await this.onSave({
+        id: this.category?.id,
+        name: this.name.trim(),
+        budgetCents: Math.round(this.budget! * 100),
+        color: this.color,
+      });
+      await this.modalController.dismiss(null, 'save');
+    } catch (e) {
+      console.error(e);
+      this.failed = true; // stay open so the user keeps what they typed
+    } finally {
+      this.saving = false;
+    }
+  }
 }

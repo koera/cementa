@@ -23,6 +23,10 @@ export class CategoryItemComponent {
     return this.category.budget - this.category.spent;
   }
 
+  get barColor(): string {
+    return this.isOver ? '#B42318' : this.category.color || '#1F2933';
+  }
+
   get isOver(): boolean {
     return this.remaining < 0;
   }

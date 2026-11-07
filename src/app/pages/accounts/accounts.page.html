@@ -15,10 +15,10 @@
 </ion-header>
 
 <ion-content>
-  <h3 class="head">Your accounts ({{ accounts.length }})</h3>
+  <h3 class="head">Your accounts ({{ accounts().length }})</h3>
 
   <ion-list class="card" lines="none">
-    @for (a of accounts; track a.id) {
+    @for (a of accounts(); track a.id) {
       <ion-item-sliding #slider>
         <ion-item lines="none" detail="false">
           <app-account-item
@@ -40,10 +40,10 @@
 
   <div class="add">
     <ion-button expand="block" fill="outline" color="dark"
-                [disabled]="accounts.length >= maxAccounts" (click)="openForm(null)">
+                [disabled]="accounts().length >= maxAccounts" (click)="openForm(null)">
       + Add account
     </ion-button>
-    @if (accounts.length >= maxAccounts) {
+    @if (accounts().length >= maxAccounts) {
       <p class="hint">You can have up to {{ maxAccounts }} accounts.</p>
     }
   </div>

@@ -9,11 +9,11 @@ export const routes: Routes = [
     children: [
       {
         path: 'transaction',
-        loadComponent: () => import('../pages/transaction/transaction').then((m) => m.TransactionPage),
+        loadComponent: () => import('../transaction/transaction').then((m) => m.TransactionPage),
       },
       {
         path: 'budget',
-        loadComponent: () => import('../pages/budget/budget.page').then((m) => m.BudgetPage),
+        loadComponent: () => import('../budget/budget.page').then((m) => m.BudgetPage),
       },
       {
         path: '',

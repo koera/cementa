@@ -47,3 +47,8 @@ ion-content { --background: #F7F3EC; }
 }
 
 .footer { padding: 12px 20px 8px; }
+
+ion-button ion-spinner {
+  width: 18px;
+  height: 18px;
+}

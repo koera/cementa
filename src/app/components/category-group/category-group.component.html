@@ -1,6 +1,9 @@
 <h3 class="title">{{ title }}</h3>
-<div class="card">
+<ion-list class="card" lines="none">
   @for (c of categories; track c.id) {
-    <app-category-item [category]="c" (categorySelect)="categorySelect.emit($event)" />
+    <app-category-item
+      [category]="c"
+      (categorySelect)="categorySelect.emit($event)"
+      (categoryDelete)="categoryDelete.emit($event)" />
   }
-</div>
+</ion-list>

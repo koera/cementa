@@ -1,5 +1,14 @@
-import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonContent, IonFab, IonFabButton, IonIcon, IonModal } from '@ionic/angular';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  IonHeader,
+  IonToolbar,
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonModal,
+  AlertController,
+} from '@ionic/angular';
 
 import { addIcons } from 'ionicons';
 import { add } from 'ionicons/icons';
@@ -8,8 +17,11 @@ import { TransactionFiltersComponent } from '../../components/transaction-filter
 import { AccountChip } from '../../models/account.model';
 import { NewTxn, TxnView } from '../../models/transaction.model';
 import { TransactionGroupComponent } from '../../components/transaction-group/transaction-group.component';
-import { Category } from '../../models/category.model';
 import { TransactionFormComponent } from '../../components/transaction-form/transaction-form.component';
+import { TransactionService } from '../../services/transaction.service';
+import { AccountService } from '../../services/account.service';
+import { CategoryService } from '../../services/category.service';
+import { Option } from '../../models/option.model';
 
 @Component({
   selector: 'app-transaction',
@@ -26,143 +38,122 @@ import { TransactionFormComponent } from '../../components/transaction-form/tran
     TransactionFiltersComponent,
     TransactionGroupComponent,
     IonModal,
-    TransactionFormComponent
+    TransactionFormComponent,
   ],
 })
-export class TransactionPage {
+export class TransactionPage implements OnInit {
+  private transactionService = inject(TransactionService);
+  private accountService = inject(AccountService);
+  private categoryService = inject(CategoryService);
+  private alertController = inject(AlertController);
+
+  selectedMonth = 'all';
+  selectedAccountId: number | null = null;
+  selectedCategory = 'all';
+
+  isFormOpen = signal(false);
+  isSaving = signal(false);
+  months = signal<Option[]>([]);
+
   constructor() {
     addIcons({ add });
   }
-  isFormOpen = false;
 
-  balance = 18420;
-  income = 42000;
-  expenses = 23520;
-
-  accounts: AccountChip[] = [
+  readonly accounts = computed<AccountChip[]>(() => [
     { id: null, name: 'All accounts' },
-    { id: 1, name: 'Bank' },
-    { id: 2, name: 'Cash' },
-  ];
+    ...this.accountService.accounts().map((a) => ({ id: a.id, name: a.name })),
+  ]);
 
-  selectedAccountId: number | null = null;
-
-  months = [
-    { value: '2026-11', label: 'Nov 2026' },
-    { value: '2026-10', label: 'Oct 2026' },
-  ];
-  categories = [
+  readonly categories = computed<Option[]>(() => [
     { value: 'all', label: 'All categories' },
-    { value: '1', label: 'Materials' },
-    { value: '2', label: 'Labor' },
-  ];
-  selectedMonth = '2026-11';
-  selectedCategory = 'all';
+    ...this.categoryService.categories().map((c) => ({ value: String(c.id), label: c.name })),
+  ]);
 
-  transactions: TxnView[] = [
-    {
-      id: 1,
-      type: 'expense',
-      amount: 125000,
-      date: '2026-11-06',
-      note: 'Concrete delivery',
-      categoryName: 'Materials',
-      accountName: 'Bank',
-    },
-    {
-      id: 2,
-      type: 'expense',
-      amount: 64000,
-      date: '2026-11-06',
-      note: 'Electrician, 2 days',
-      categoryName: 'Labor',
-      accountName: 'Cash',
-    },
-    {
-      id: 3,
-      type: 'income',
-      amount: 800000,
-      date: '2026-11-06',
-      note: 'Client payment 3',
-      categoryName: 'Income',
-      accountName: 'Bank',
-    },
-    {
-      id: 4,
-      type: 'expense',
-      amount: 32000,
-      date: '2026-11-05',
-      note: 'Building permit fee',
-      categoryName: 'Permits',
-      accountName: 'Bank',
-    },
-    {
-      id: 5,
-      type: 'expense',
-      amount: 9500,
-      date: '2026-11-05',
-      note: 'Tool rental',
-      categoryName: 'Equipment',
-      accountName: 'Cash',
-    },
-  ];
+  readonly formAccounts = this.accountService.accounts;
+
+  readonly formCategories = this.categoryService.categories;
+
+  readonly groups = computed(() => {
+    const map = new Map<string, TxnView[]>();
+    for (const t of this.transactionService.transactions()) {
+      map.set(t.date, [...(map.get(t.date) ?? []), t]);
+    }
+    return [...map.entries()].map(([date, items]) => ({ date, items })); // already newest first
+  });
+
+  async ngOnInit() {
+    await Promise.all([this.accountService.load(), this.categoryService.load()]);
+    this.months.set(await this.transactionService.months());
+    await this.reload();
+  }
+
+  get balance() {
+    return this.accountService.total() / 100;
+  }
+
+  get income() {
+    return this.transactionService.income() / 100;
+  }
+
+  get expenses() {
+    return this.transactionService.expenses() / 100;
+  }
 
   onAccountChange(id: number | null) {
-    this.selectedAccountId = id; /* reload list */
+    this.selectedAccountId = id;
+    this.reload();
+  }
+  onMonthChange(v: string) {
+    this.selectedMonth = v;
+    this.reload();
+  }
+  onCategoryChange(v: string) {
+    this.selectedCategory = v;
+    this.reload();
   }
 
   exportPdf() {
     /* generate the PDF from the filtered list, later */
   }
 
-  onMonthChange(v: string) {
-    this.selectedMonth = v; /* reload list */
-  }
-
-  onCategoryChange(v: string) {
-    this.selectedCategory = v; /* reload list */
-  }
-
-  get groups(): { date: string; items: TxnView[] }[] {
-    const map = new Map<string, TxnView[]>();
-    for (const t of this.transactions) {
-      map.set(t.date, [...(map.get(t.date) ?? []), t]);
-    }
-    return [...map.entries()]
-      .sort(([a], [b]) => b.localeCompare(a)) // newest date first
-      .map(([date, items]) => ({ date, items }));
-  }
-
   onSelectTransaction(t: TxnView) {
     /* open the edit form later */
   }
+  async onDeleteTransaction(transaction: TxnView) {
+    await this.transactionService.remove(transaction.id);
+    this.reload();
+  }
 
-  formAccounts: AccountChip[] = [
-    { id: 1, name: 'Bank' },
-    { id: 2, name: 'Cash' },
-  ];
-  formCategories: Category[] = [
-    { id: 1, name: 'Materials' },
-    { id: 2, name: 'Labor' },
-    { id: 3, name: 'Permits' },
-    { id: 4, name: 'Equipment' },
-  ];
+  async onSaveTransaction(n: NewTxn) {
+    const t0 = performance.now();
 
-  onSaveTransaction(n: NewTxn) {
-    const account = this.formAccounts.find((a) => a.id === n.accountId);
-    const category = this.formCategories.find((c) => c.id === n.categoryId);
-    this.transactions = [
-      {
-        id: Date.now(), // temporary, SQLite will give the real id
-        type: n.type,
-        amount: n.amountCents,
-        date: n.date,
-        note: n.note || category?.name || 'Income',
-        categoryName: category?.name ?? 'Income',
-        accountName: account?.name ?? '',
-      },
-      ...this.transactions,
-    ];
-    this.isFormOpen = false;
+    if (this.isSaving()) return; // ignore a second tap
+    this.isSaving.set(true);
+    try {
+      await this.transactionService.add(n);
+
+      this.isFormOpen.set(false); // saved, so close the form
+    } catch (e) {
+      console.error(e);
+      const alert = await this.alertController.create({
+        header: 'Could not save',
+        message: 'The transaction was not saved. Please try again.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+      return;
+    } finally {
+      this.isSaving.set(false);
+    }
+
+    this.months.set(await this.transactionService.months());
+  }
+
+  private reload() {
+    return this.transactionService.load({
+      accountId: this.selectedAccountId,
+      month: this.selectedMonth === 'all' ? null : this.selectedMonth,
+      categoryId: this.selectedCategory === 'all' ? null : Number(this.selectedCategory),
+    });
   }
 }

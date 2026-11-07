@@ -16,13 +16,21 @@
 
     <div class="field">
       <label for="amount">Amount (€)</label>
-      <input id="amount" class="in big" type="number" inputmode="decimal"
-             step="0.01" min="0" placeholder="0.00" [(ngModel)]="amount">
+      <input
+        id="amount"
+        class="in big"
+        type="number"
+        inputmode="decimal"
+        step="0.01"
+        min="0"
+        placeholder="0.00"
+        [(ngModel)]="amount"
+      />
     </div>
 
     <div class="field">
       <label for="date">Date</label>
-      <input id="date" class="in" type="date" [(ngModel)]="date">
+      <input id="date" class="in" type="date" [(ngModel)]="date" />
     </div>
 
     <div class="field">
@@ -39,10 +47,15 @@
     @if (type === 'expense') {
       <div class="field">
         <label>Category</label>
-        <ion-select class="in-select" aria-label="Category" interface="popover"
-                    placeholder="Choose a category" toggleIcon="chevron-down"
-                    [value]="categoryId"
-                    (ionChange)="categoryId = $event.detail.value">
+        <ion-select
+          class="in-select"
+          aria-label="Category"
+          interface="popover"
+          placeholder="Choose a category"
+          toggleIcon="chevron-down"
+          [value]="categoryId"
+          (ionChange)="categoryId = $event.detail.value"
+        >
           @for (c of categories; track c.id) {
             <ion-select-option [value]="c.id">{{ c.name }}</ion-select-option>
           }
@@ -52,9 +65,13 @@
 
     <div class="field">
       <label for="note">Note</label>
-      <input id="note" class="in" type="text"
-             [placeholder]="type === 'expense' ? 'What was it for?' : 'Who paid you?'"
-             [(ngModel)]="note">
+      <input
+        id="note"
+        class="in"
+        type="text"
+        [placeholder]="type === 'expense' ? 'What was it for?' : 'Who paid you?'"
+        [(ngModel)]="note"
+      />
     </div>
   </div>
 </ion-content>
@@ -62,8 +79,11 @@
 <ion-footer class="ion-no-border">
   <ion-toolbar>
     <div class="footer">
-      <ion-button color="primary" expand="block" [disabled]="!canSave" (click)="save()">
-        Save transaction
+      <ion-button color="primary" expand="block" [disabled]="!canSave || saving" (click)="save()">
+        @if (saving) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+        }
+        {{ saving ? 'Saving…' : 'Save transaction' }}
       </ion-button>
     </div>
   </ion-toolbar>

@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="cancelled.emit()">Cancel</ion-button>
+      <ion-button (click)="cancel()">Cancel</ion-button>
     </ion-buttons>
     <ion-title>{{ isEdit ? 'Edit category' : 'New budget category' }}</ion-title>
   </ion-toolbar>
@@ -51,12 +51,20 @@
       </div>
     </div>
   </div>
+  @if (failed) {
+    <p class="hint" role="alert">Could not save. Please try again.</p>
+  }
 </ion-content>
 
 <ion-footer class="ion-no-border">
   <ion-toolbar>
     <div class="footer">
-      <ion-button color="primary" expand="block" [disabled]="!canSave" (click)="save()"> Save category </ion-button>
+      <ion-button color="primary" expand="block" [disabled]="!canSave || saving" (click)="save()">
+        @if (saving) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+        }
+        {{ saving ? 'Saving…' : 'Save category' }}
+      </ion-button>
     </div>
   </ion-toolbar>
 </ion-footer>
