@@ -13,8 +13,8 @@ import { trashOutline } from 'ionicons/icons';
 })
 export class TransactionItemComponent {
   @Input({ required: true }) txn!: TxnView;
-  @Output() select = new EventEmitter<TxnView>();
   @Output() txnDelete = new EventEmitter<TxnView>();
+  @Output() txnSelect = new EventEmitter<TxnView>();
 
   constructor() {
     addIcons({ trashOutline });
@@ -23,5 +23,10 @@ export class TransactionItemComponent {
   onDelete(slider: IonItemSliding) {
     slider.close(); // slide the row back
     this.txnDelete.emit(this.txn);
+  }
+
+  onOpen() {
+    console.log('[item] tapped', this.txn.id);
+    this.txnSelect.emit(this.txn);
   }
 }

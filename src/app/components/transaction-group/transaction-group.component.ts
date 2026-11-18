@@ -13,6 +13,6 @@ import { IonList } from '@ionic/angular';
 export class TransactionGroupComponent {
   @Input({ required: true }) date!: string; // 'YYYY-MM-DD'
   @Input({ required: true }) transactions: TxnView[] = [];
-  @Output() select = new EventEmitter<TxnView>();
   @Output() txnDelete = new EventEmitter<TxnView>();
+  @Output() txnSelect = new EventEmitter<TxnView>();
 }

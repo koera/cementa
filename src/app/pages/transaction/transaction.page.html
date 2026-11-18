@@ -30,7 +30,7 @@
   <app-transaction-group
     [date]="g.date"
     [transactions]="g.items"
-    (select)="onSelectTransaction($event)"
+    (txnSelect)="onSelectTransaction($event)"
     (txnDelete)="onDeleteTransaction($event)" />
 }
 <ion-fab slot="fixed" vertical="bottom" horizontal="end">

@@ -73,6 +73,18 @@
         [(ngModel)]="note"
       />
     </div>
+    <div class="field">
+      <label for="details">Details (optional)</label>
+      <textarea
+        id="details"
+        class="in"
+        rows="4"
+        [placeholder]="
+          type === 'expense' ? 'Supplier, invoice number, anything useful…' : 'Payment reference, what it covers…'
+        "
+        [(ngModel)]="details"
+      ></textarea>
+    </div>
   </div>
 </ion-content>
 

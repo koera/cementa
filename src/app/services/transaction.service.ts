@@ -24,6 +24,14 @@ export class TransactionService {
 
   private filter: TxnFilter = { accountId: null, month: null, categoryId: null };
 
+  private static readonly SELECT = `
+    SELECT t.id, t.type, t.amount, t.date, t.note, t.details,
+          COALESCE(c.name, 'Income') AS categoryName,
+          a.name AS accountName
+    FROM txn t
+    JOIN account a ON a.id = t.account_id
+    LEFT JOIN category c ON c.id = t.category_id`;
+
   private async track<T>(work: () => Promise<T>): Promise<T> {
     const timer = setTimeout(() => this.loading.set(true), 250);
     try {
@@ -54,15 +62,9 @@ export class TransactionService {
 
       this.transactions.set(
         await this.db.query<TxnView>(
-          `
-      SELECT t.id, t.type, t.amount, t.date, t.note,
-             COALESCE(c.name, 'Income') AS categoryName,
-             a.name AS accountName
-      FROM txn t
-      JOIN account a ON a.id = t.account_id
-      LEFT JOIN category c ON c.id = t.category_id
-      ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
-      ORDER BY t.date DESC, t.id DESC`,
+          `${TransactionService.SELECT}
+          ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
+          ORDER BY t.date DESC, t.id DESC`,
           params,
         ),
       );
@@ -85,20 +87,22 @@ export class TransactionService {
   }
 
   async add(n: NewTxn) {
-    await this.db.run('INSERT INTO txn (type, amount, date, account_id, category_id, note) VALUES (?, ?, ?, ?, ?, ?)', [
-      n.type,
-      n.amountCents,
-      n.date,
-      n.accountId,
-      n.categoryId,
-      n.note,
-    ]);
+    await this.db.run(
+      `INSERT INTO txn (type, amount, date, account_id, category_id, note, details)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [n.type, n.amountCents, n.date, n.accountId, n.categoryId, n.note, n.details],
+    );
     await this.refresh();
   }
 
   async remove(id: number) {
     await this.db.run('DELETE FROM txn WHERE id = ?', [id]);
     await this.refresh();
+  }
+
+  async get(id: number): Promise<TxnView | undefined> {
+    const rows = await this.db.query<TxnView>(`${TransactionService.SELECT} WHERE t.id = ?`, [id]);
+    return rows[0];
   }
 
   // balances and "spent" depend on the transactions, so reload all three

@@ -109,10 +109,12 @@ export class TransactionPage implements OnInit {
   onAccountChange(id: number | null) {
     this.router.navigate([], { queryParams: { accountId: id }, replaceUrl: true });
   }
+
   onMonthChange(v: string) {
     this.selectedMonth = v;
     this.reload();
   }
+
   onCategoryChange(v: string) {
     this.selectedCategory = v;
     this.reload();
@@ -122,9 +124,10 @@ export class TransactionPage implements OnInit {
     /* generate the PDF from the filtered list, later */
   }
 
-  onSelectTransaction(t: TxnView) {
-    /* open the edit form later */
+  async onSelectTransaction(transaction: TxnView) {
+    this.router.navigate(['/transaction-details', transaction.id]);
   }
+
   async onDeleteTransaction(transaction: TxnView) {
     await this.transactionService.remove(transaction.id);
     this.reload();

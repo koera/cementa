@@ -49,6 +49,7 @@ export class TransactionFormComponent implements OnInit {
   accountId: number | null = null;
   categoryId: number | null = null;
   note = '';
+  details = '';
 
   ngOnInit() {
     const now = new Date();
@@ -81,6 +82,7 @@ export class TransactionFormComponent implements OnInit {
       accountId: this.accountId!,
       categoryId: this.type === 'expense' ? this.categoryId : null,
       note: this.note.trim(),
+      details: this.details.trim(),
     });
   }
 }

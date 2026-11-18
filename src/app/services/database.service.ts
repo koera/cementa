@@ -33,6 +33,9 @@ const MIGRATIONS: string[][] = [
     `CREATE INDEX idx_txn_account ON txn(account_id)`,
     `INSERT INTO account (name, type) VALUES ('Bank', 'bank'), ('Cash', 'cash')`,
   ],
+  [
+    `ALTER TABLE txn ADD COLUMN details TEXT NOT NULL DEFAULT ''`,
+  ],
 ];
 
 @Injectable({ providedIn: 'root' })

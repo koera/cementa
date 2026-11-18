@@ -52,3 +52,9 @@ ion-button ion-spinner {
   width: 18px;
   height: 18px;
 }
+textarea.in {
+  height: auto;
+  min-height: 96px;
+  padding: 12px 14px;
+  resize: none;
+}

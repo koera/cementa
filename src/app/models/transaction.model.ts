@@ -6,6 +6,7 @@ export interface TxnView {
   note: string;
   categoryName: string;  // for income, use 'Income'
   accountName: string;
+  details: string;
 }
 
 export interface NewTxn {
@@ -15,4 +16,5 @@ export interface NewTxn {
   accountId: number;
   categoryId: number | null;  // always null for income
   note: string;
+  details: string;
 }
