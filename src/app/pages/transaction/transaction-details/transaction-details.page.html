@@ -1,0 +1,45 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="summary nav">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/transactions" text="Back"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  @if (txn(); as t) {
+  <ion-toolbar class="summary">
+    <div class="summary-content">
+      <div class="brand">{{ t.type === 'income' ? 'INCOME' : 'EXPENSE' }}</div>
+      <div class="balance">{{ t.type === 'income' ? '+' : '−' }}{{ t.amount / 100 | currency:'EUR' }}</div>
+      <div class="label">{{ t.note || t.categoryName }}</div>
+    </div>
+  </ion-toolbar>
+  }
+</ion-header>
+
+<ion-content>
+  @if (txn(); as t) {
+  <dl class="card rows">
+    <div class="row">
+      <dt>Date</dt>
+      <dd>{{ t.date | date:'EEE d MMM y' }}</dd>
+    </div>
+    <div class="row">
+      <dt>Account</dt>
+      <dd>{{ t.accountName }}</dd>
+    </div>
+    <div class="row">
+      <dt>Category</dt>
+      <dd>{{ t.categoryName }}</dd>
+    </div>
+  </dl>
+
+  <h3 class="head">Details</h3>
+  <div class="card details">{{ t.details || 'No details added.' }}</div>
+
+  <div class="actions">
+    <ion-button expand="block" fill="outline" color="danger" (click)="onDelete()"> Delete transaction </ion-button>
+  </div>
+  } @else if (txn() === null) {
+  <p class="head">Transaction not found.</p>
+  }
+</ion-content>

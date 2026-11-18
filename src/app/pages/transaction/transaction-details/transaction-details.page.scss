@@ -1,0 +1,39 @@
+ion-content { --background: #F7F3EC; }
+.nav { --padding-bottom: 0; }
+ion-back-button { --color: #F7F3EC; }
+
+.head {
+  margin: 0;
+  padding: 14px 20px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5B6670;
+}
+
+.card {
+  margin: 14px 20px 0;
+  background: #fff;
+  border: 1px solid #E5DFD3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.head + .card { margin-top: 0; }
+
+.rows { padding: 0; }
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-top: 1px solid #EFE9DD;
+  &:first-child { border-top: 0; }
+}
+dt { font-size: 14px; color: #5B6670; }
+dd { margin: 0; font-weight: 600; text-align: right; }
+
+.details {
+  padding: 16px;
+  line-height: 1.4;
+  white-space: pre-wrap;   /* keeps the line breaks the user typed */
+}
+
+.actions { padding: 24px 20px; }
