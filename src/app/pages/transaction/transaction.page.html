@@ -24,6 +24,8 @@
     (monthChange)="onMonthChange($event)"
     (categoryChange)="onCategoryChange($event)"
     (exportPdf)="exportPdf()"
+    [search]="searchText"
+    (searchChange)="onSearchChange($event)"
   >
   </app-transaction-filters>
   @for (g of groups(); track g.date) {
@@ -31,22 +33,24 @@
     [date]="g.date"
     [transactions]="g.items"
     (txnSelect)="onSelectTransaction($event)"
-    (txnDelete)="onDeleteTransaction($event)" />
-}
-<ion-fab slot="fixed" vertical="bottom" horizontal="end">
-  <ion-fab-button color="primary" aria-label="Add transaction" (click)="isFormOpen.set(true)">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
+    (txnDelete)="onDeleteTransaction($event)"
+  />
+  }
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="primary" aria-label="Add transaction" (click)="isFormOpen.set(true)">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
-<ion-modal [isOpen]="isFormOpen()" (didDismiss)="isFormOpen.set(false)">
-  <ng-template>
-    <app-transaction-form
-      [accounts]="formAccounts()"
-      [categories]="formCategories()"
-      (cancelled)="isFormOpen.set(false)"
-      [saving]="isSaving()"
-      (saved)="onSaveTransaction($event)" />
-  </ng-template>
-</ion-modal>
+  <ion-modal [isOpen]="isFormOpen()" (didDismiss)="isFormOpen.set(false)">
+    <ng-template>
+      <app-transaction-form
+        [accounts]="formAccounts()"
+        [categories]="formCategories()"
+        (cancelled)="isFormOpen.set(false)"
+        [saving]="isSaving()"
+        (saved)="onSaveTransaction($event)"
+      />
+    </ng-template>
+  </ion-modal>
 </ion-content>

@@ -18,3 +18,10 @@ export interface NewTxn {
   note: string;
   details: string;
 }
+
+export interface TxnFilter {
+  accountId: number | null;
+  month: string | null;
+  categoryId: number | null;
+  search: string;
+}

@@ -53,6 +53,7 @@ export class TransactionPage implements OnInit {
   selectedMonth = 'all';
   selectedAccountId: number | null = null;
   selectedCategory = 'all';
+  searchText = '';
 
   isFormOpen = signal(false);
   isSaving = signal(false);
@@ -158,11 +159,18 @@ export class TransactionPage implements OnInit {
     this.months.set(await this.transactionService.months());
   }
 
+  onSearchChange(v: string) {
+    if (v === this.searchText) return; // clearing can fire two events
+    this.searchText = v;
+    this.reload();
+  }
+
   private reload() {
     return this.transactionService.load({
       accountId: this.selectedAccountId,
       month: this.selectedMonth === 'all' ? null : this.selectedMonth,
       categoryId: this.selectedCategory === 'all' ? null : Number(this.selectedCategory),
+      search: this.searchText,
     });
   }
 }

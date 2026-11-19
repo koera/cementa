@@ -2,13 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { AccountService } from './account.service';
 import { CategoryService } from './category.service';
 import { DatabaseService } from './database.service';
-import { NewTxn, TxnView } from '../models/transaction.model';
-
-export interface TxnFilter {
-  accountId: number | null;
-  month: string | null; // 'YYYY-MM'
-  categoryId: number | null;
-}
+import { NewTxn, TxnFilter, TxnView } from '../models/transaction.model';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
@@ -22,7 +16,7 @@ export class TransactionService {
 
   readonly loading = signal(false);
 
-  private filter: TxnFilter = { accountId: null, month: null, categoryId: null };
+  private filter: TxnFilter = { accountId: null, month: null, categoryId: null, search: '' };
 
   private static readonly SELECT = `
     SELECT t.id, t.type, t.amount, t.date, t.note, t.details,
@@ -58,6 +52,13 @@ export class TransactionService {
       if (filter.categoryId !== null) {
         where.push('t.category_id = ?');
         params.push(filter.categoryId);
+      }
+      const q = filter.search.trim();
+
+      if (q) {
+        where.push(`(t.note LIKE ? ESCAPE '\\' OR t.details LIKE ? ESCAPE '\\')`);
+        const like = `%${q.replace(/[\\%_]/g, (m) => '\\' + m)}%`;
+        params.push(like, like);
       }
 
       this.transactions.set(
