@@ -8,6 +8,7 @@ import {
   IonIcon,
   IonModal,
   AlertController,
+  LoadingController,
 } from '@ionic/angular';
 
 import { addIcons } from 'ionicons';
@@ -23,6 +24,7 @@ import { AccountService } from '../../services/account.service';
 import { CategoryService } from '../../services/category.service';
 import { Option } from '../../models/option.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PdfReportService, ReportFile } from '../../services/pdf-report.service';
 
 @Component({
   selector: 'app-transaction',
@@ -49,6 +51,8 @@ export class TransactionPage implements OnInit {
   private alertController = inject(AlertController);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private reportService = inject(PdfReportService);
+  private loadingController = inject(LoadingController);
 
   selectedMonth = 'all';
   selectedAccountId: number | null = null;
@@ -121,8 +125,44 @@ export class TransactionPage implements OnInit {
     this.reload();
   }
 
-  exportPdf() {
-    /* generate the PDF from the filtered list, later */
+  async exportPdf() {
+    const loading = await this.loadingController.create({ message: 'Preparing PDF…', spinner: 'crescent' });
+    await loading.present();
+
+    let file: ReportFile;
+    try {
+      file = await this.reportService.generate({
+        filters: {
+          account: this.accounts().find((a) => a.id === this.selectedAccountId)?.name ?? 'All',
+          month: this.labelOf(this.months(), this.selectedMonth),
+          category: this.labelOf(this.categories(), this.selectedCategory),
+          search: this.searchText.trim(),
+        },
+        transactions: this.transactionService.transactions(),
+        categories: this.categoryService.categories(),
+        accounts: this.accountService.accounts(),
+      });
+    } catch (e) {
+      console.error(e);
+      await this.showError('Could not create the PDF. Please try again.');
+      return;
+    } finally {
+      await loading.dismiss(); // close the loader before the share sheet opens
+    }
+
+    try {
+      await this.reportService.deliver(file);
+    } catch (e: any) {
+      // closing the share sheet without sharing is not an error
+      if (
+        !String(e?.message ?? e)
+          .toLowerCase()
+          .includes('cancel')
+      ) {
+        console.error(e);
+        await this.showError('Could not open the PDF. Please try again.');
+      }
+    }
   }
 
   async onSelectTransaction(transaction: TxnView) {
@@ -172,5 +212,14 @@ export class TransactionPage implements OnInit {
       categoryId: this.selectedCategory === 'all' ? null : Number(this.selectedCategory),
       search: this.searchText,
     });
+  }
+
+  private labelOf(options: { value: string; label: string }[], value: string): string {
+    return options.find((o) => o.value === value)?.label ?? 'All';
+  }
+
+  private async showError(message: string) {
+    const alert = await this.alertController.create({ header: 'Export failed', message, buttons: ['OK'] });
+    await alert.present();
   }
 }

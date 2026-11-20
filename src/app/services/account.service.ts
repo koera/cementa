@@ -15,6 +15,8 @@ export class AccountService {
       SELECT a.id, a.name, a.type,
              a.opening_balance AS openingBalance,
              a.opening_balance + COALESCE(SUM(CASE t.type WHEN 'income' THEN t.amount ELSE -t.amount END), 0) AS balance,
+             COALESCE(SUM(CASE WHEN t.type = 'income' THEN t.amount END), 0) AS income,
+             COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount END), 0) AS expenses,
              COUNT(t.id) AS txnCount
       FROM account a
       LEFT JOIN txn t ON t.account_id = a.id
