@@ -16,7 +16,14 @@ export class TransactionService {
 
   readonly loading = signal(false);
 
-  private filter: TxnFilter = { accountId: null, month: null, categoryId: null, search: '' };
+  private filter: TxnFilter = {
+    accountId: null,
+    month: null,
+    dateFrom: null,
+    dateTo: null,
+    categoryId: null,
+    search: '',
+  };
 
   private static readonly SELECT = `
     SELECT t.id, t.type, t.amount, t.date, t.note, t.details,
@@ -53,6 +60,14 @@ export class TransactionService {
         where.push('t.category_id = ?');
         params.push(filter.categoryId);
       }
+      if (filter.dateFrom) {
+        where.push('t.date >= ?');
+        params.push(filter.dateFrom);
+      }
+      if (filter.dateTo) {
+        where.push('t.date <= ?');
+        params.push(filter.dateTo);
+      }
       const q = filter.search.trim();
 
       if (q) {
@@ -84,6 +99,7 @@ export class TransactionService {
         value: m,
         label: new Date(`${m}-01T12:00:00`).toLocaleDateString('en', { month: 'short', year: 'numeric' }),
       })),
+      { value: 'range', label: 'Custom range…' },
     ];
   }
 

@@ -1,9 +1,21 @@
+.search { padding: 12px 20px 0; }
+
+ion-searchbar {
+  padding: 0;
+  --background: #fff;
+  --color: #1F2933;
+  --placeholder-color: #5B6670;
+  --border-radius: 18px;
+  --box-shadow: inset 0 0 0 1px #D5CDBD;
+  height: 40px;
+}
+
 .row {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding: 12px 20px;
   align-items: center;
-  overflow-x: auto;
 }
 
 .chip {
@@ -24,6 +36,7 @@
   }
 
   &.pdf {
+    flex: none;
     margin-left: auto;
     display: flex;
     align-items: center;
@@ -33,14 +46,16 @@
     font-weight: 700;
   }
 }
+
 .chip-select {
   --padding-top: 0;
   --padding-bottom: 0;
   --padding-start: 14px;
   --padding-end: 10px;
 
-  flex: 0 0 auto;
-  width: auto;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
   height: 36px;
   min-height: 36px;
   border: 1px solid #D5CDBD;
@@ -58,6 +73,9 @@
 
   &::part(text) {
     line-height: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &::part(icon) {
@@ -68,14 +86,36 @@
   }
 }
 
-.search { padding: 12px 20px 0; }
+.range { align-items: flex-end; gap: 12px; }
 
-ion-searchbar {
-  padding: 0;
-  --background: #fff;
-  --color: #1F2933;
-  --placeholder-color: #5B6670;
-  --border-radius: 18px;
-  --box-shadow: inset 0 0 0 1px #D5CDBD;
-  height: 40px;
+.range label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5B6670;
+}
+
+.chip-date {
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #D5CDBD;
+  border-radius: 18px;
+  background: #fff;
+  color: #1F2933;
+  font: inherit;
+  font-size: 14px;
+}
+
+.clear {
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1F2933;
+  text-decoration: underline;
 }

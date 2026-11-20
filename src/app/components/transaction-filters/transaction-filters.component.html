@@ -6,14 +6,12 @@
     inputmode="search"
     enterkeyhint="search"
     (ionInput)="onSearch($event)"
-    (ionClear)="searchChange.emit('')" />
+    (ionClear)="searchChange.emit('')"
+  />
 </div>
 <div class="row">
   @for (a of accounts; track a.id) {
-    <button
-      class="chip"
-      [class.on]="a.id === selectedAccountId"
-      (click)="accountChange.emit(a.id)">
+    <button class="chip" [class.on]="a.id === selectedAccountId" (click)="accountChange.emit(a.id)">
       {{ a.name }}
     </button>
   }
@@ -26,7 +24,8 @@
     interface="popover"
     [value]="selectedMonth"
     toggleIcon="chevron-down"
-    (ionChange)="monthChange.emit($event.detail.value)">
+    (ionChange)="monthChange.emit($event.detail.value)"
+  >
     @for (m of months; track m.value) {
       <ion-select-option [value]="m.value">{{ m.label }}</ion-select-option>
     }
@@ -38,7 +37,8 @@
     interface="popover"
     [value]="selectedCategory"
     toggleIcon="chevron-down"
-    (ionChange)="categoryChange.emit($event.detail.value)">
+    (ionChange)="categoryChange.emit($event.detail.value)"
+  >
     @for (c of categories; track c.value) {
       <ion-select-option [value]="c.value">{{ c.label }}</ion-select-option>
     }
@@ -49,3 +49,29 @@
     PDF
   </button>
 </div>
+
+@if (isRange) {
+  <div class="row range">
+    <label
+      >From
+      <input
+        class="chip-date"
+        type="date"
+        [value]="dateFrom"
+        [attr.max]="dateTo || null"
+        (change)="onFrom($any($event.target).value)"
+      />
+    </label>
+    <label
+      >To
+      <input
+        class="chip-date"
+        type="date"
+        [value]="dateTo"
+        [attr.min]="dateFrom || null"
+        (change)="onTo($any($event.target).value)"
+      />
+    </label>
+    <button type="button" class="clear" (click)="clearRange()">Clear</button>
+  </div>
+}

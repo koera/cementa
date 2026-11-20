@@ -180,7 +180,7 @@ export class PdfReportService {
           text: [
             'Account: ',
             { text: filters.account, bold: true, color: INK },
-            '  ·  Month: ',
+            '  ·  Period: ',
             { text: filters.month, bold: true, color: INK },
             '  ·  Category: ',
             { text: filters.category, bold: true, color: INK },

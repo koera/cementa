@@ -26,6 +26,9 @@
     (exportPdf)="exportPdf()"
     [search]="searchText"
     (searchChange)="onSearchChange($event)"
+    [dateFrom]="dateFrom"
+    [dateTo]="dateTo"
+    (rangeChange)="onRangeChange($event)"
   >
   </app-transaction-filters>
   @for (g of groups(); track g.date) {

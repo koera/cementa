@@ -58,6 +58,8 @@ export class TransactionPage implements OnInit {
   selectedAccountId: number | null = null;
   selectedCategory = 'all';
   searchText = '';
+  dateFrom = '';
+  dateTo = '';
 
   isFormOpen = signal(false);
   isSaving = signal(false);
@@ -134,7 +136,7 @@ export class TransactionPage implements OnInit {
       file = await this.reportService.generate({
         filters: {
           account: this.accounts().find((a) => a.id === this.selectedAccountId)?.name ?? 'All',
-          month: this.labelOf(this.months(), this.selectedMonth),
+          month: this.periodLabel(),
           category: this.labelOf(this.categories(), this.selectedCategory),
           search: this.searchText.trim(),
         },
@@ -205,10 +207,19 @@ export class TransactionPage implements OnInit {
     this.reload();
   }
 
+  onRangeChange(r: { from: string; to: string }) {
+    this.dateFrom = r.from;
+    this.dateTo = r.to;
+    this.reload();
+  }
+
   private reload() {
+    const range = this.selectedMonth === 'range';
     return this.transactionService.load({
       accountId: this.selectedAccountId,
-      month: this.selectedMonth === 'all' ? null : this.selectedMonth,
+      month: range || this.selectedMonth === 'all' ? null : this.selectedMonth,
+      dateFrom: range && this.dateFrom ? this.dateFrom : null,
+      dateTo: range && this.dateTo ? this.dateTo : null,
       categoryId: this.selectedCategory === 'all' ? null : Number(this.selectedCategory),
       search: this.searchText,
     });
@@ -221,5 +232,15 @@ export class TransactionPage implements OnInit {
   private async showError(message: string) {
     const alert = await this.alertController.create({ header: 'Export failed', message, buttons: ['OK'] });
     await alert.present();
+  }
+
+  private periodLabel(): string {
+    if (this.selectedMonth !== 'range') return this.labelOf(this.months(), this.selectedMonth);
+    const fmt = (iso: string) =>
+      new Date(`${iso}T12:00:00`).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    if (this.dateFrom && this.dateTo) return `${fmt(this.dateFrom)} – ${fmt(this.dateTo)}`;
+    if (this.dateFrom) return `From ${fmt(this.dateFrom)}`;
+    if (this.dateTo) return `Until ${fmt(this.dateTo)}`;
+    return 'All dates';
   }
 }

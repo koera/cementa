@@ -24,12 +24,15 @@ export class TransactionFiltersComponent {
   @Input() selectedMonth = '';
   @Input() selectedCategory = 'all';
   @Input() search = '';
+  @Input() dateFrom = '';
+  @Input() dateTo = '';
 
   @Output() accountChange = new EventEmitter<number | null>();
   @Output() exportPdf = new EventEmitter<void>();
   @Output() monthChange = new EventEmitter<string>();
   @Output() categoryChange = new EventEmitter<string>();
   @Output() searchChange = new EventEmitter<string>();
+  @Output() rangeChange = new EventEmitter<{ from: string; to: string }>();
 
   constructor() {
     addIcons({ downloadOutline, chevronDown });
@@ -38,5 +41,19 @@ export class TransactionFiltersComponent {
   onSearch(e: Event) {
     const value = (e as CustomEvent).detail?.value ?? '';
     this.searchChange.emit(String(value));
+  }
+
+  get isRange(): boolean {
+    return this.selectedMonth === 'range';
+  }
+
+  onFrom(v: string) {
+    this.rangeChange.emit({ from: v, to: this.dateTo });
+  }
+  onTo(v: string) {
+    this.rangeChange.emit({ from: this.dateFrom, to: v });
+  }
+  clearRange() {
+    this.rangeChange.emit({ from: '', to: '' });
   }
 }

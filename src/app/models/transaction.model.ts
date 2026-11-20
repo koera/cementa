@@ -22,6 +22,8 @@ export interface NewTxn {
 export interface TxnFilter {
   accountId: number | null;
   month: string | null;
+  dateFrom: string | null;   // 'YYYY-MM-DD'
+  dateTo: string | null;
   categoryId: number | null;
   search: string;
 }
