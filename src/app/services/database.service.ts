@@ -33,9 +33,7 @@ const MIGRATIONS: string[][] = [
     `CREATE INDEX idx_txn_account ON txn(account_id)`,
     `INSERT INTO account (name, type) VALUES ('Bank', 'bank'), ('Cash', 'cash')`,
   ],
-  [
-    `ALTER TABLE txn ADD COLUMN details TEXT NOT NULL DEFAULT ''`,
-  ],
+  [`ALTER TABLE txn ADD COLUMN details TEXT NOT NULL DEFAULT ''`],
 ];
 
 @Injectable({ providedIn: 'root' })
@@ -67,7 +65,12 @@ export class DatabaseService {
     if (this.isWeb) {
       const el = document.createElement('jeep-sqlite');
       document.body.appendChild(el);
-      await customElements.whenDefined('jeep-sqlite');
+      await Promise.race([
+        customElements.whenDefined('jeep-sqlite'),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('jeep-sqlite is not registered: see main.ts')), 3000),
+        ),
+      ]);
       await this.sqlite.initWebStore();
     }
 

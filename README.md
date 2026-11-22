@@ -173,3 +173,10 @@ Standalone Ionic needs each icon registered once: `addIcons({ listOutline, ... }
 
 **Safari web inspector for the simulator**
 *Safari → Settings → Advanced → Show features for web developers*, then *Develop → Simulator → (your app)*.
+
+**Browser (`ng serve`): `wasm streaming compile failed: LinkError`**
+The `sql-wasm.wasm` file doesn't match the sql.js version used by `jeep-sqlite`. Pin it and copy the file again:
+npm install sql.js@1.11.0 --save-exact
+cp node_modules/sql.js/dist/sql-wasm.wasm src/assets/
+Then clear the site data in the browser (DevTools → Application → Clear site data) and reload.
+The browser database is separate from the simulator's and the phone's.
