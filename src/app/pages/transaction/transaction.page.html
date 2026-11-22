@@ -29,6 +29,7 @@
     [dateFrom]="dateFrom"
     [dateTo]="dateTo"
     (rangeChange)="onRangeChange($event)"
+    (clearFilters)="onClearFilters()"
   >
   </app-transaction-filters>
   @for (g of groups(); track g.date) {

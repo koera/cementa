@@ -1,4 +1,4 @@
-<div class="search">
+<div class="bar">
   <ion-searchbar
     placeholder="Search note or details"
     [value]="search"
@@ -6,72 +6,73 @@
     inputmode="search"
     enterkeyhint="search"
     (ionInput)="onSearch($event)"
-    (ionClear)="searchChange.emit('')"
-  />
-</div>
-<div class="row">
-  @for (a of accounts; track a.id) {
-    <button class="chip" [class.on]="a.id === selectedAccountId" (click)="accountChange.emit(a.id)">
-      {{ a.name }}
-    </button>
-  }
-</div>
+    (ionClear)="searchChange.emit('')" />
 
-<div class="row">
-  <ion-select
-    class="chip-select"
-    aria-label="Month"
-    interface="popover"
-    [value]="selectedMonth"
-    toggleIcon="chevron-down"
-    (ionChange)="monthChange.emit($event.detail.value)"
-  >
-    @for (m of months; track m.value) {
-      <ion-select-option [value]="m.value">{{ m.label }}</ion-select-option>
+  <button type="button" class="toggle"
+          [attr.aria-label]="activeCount ? 'Filters, ' + activeCount + ' active' : 'Filters'"
+          aria-controls="filter-panel"
+          [attr.aria-expanded]="open"
+          (click)="open = !open">
+    <ion-icon name="options-outline"></ion-icon>
+    @if (activeCount > 0) {
+      <span class="badge" aria-hidden="true">{{ activeCount }}</span>
     }
-  </ion-select>
+  </button>
 
-  <ion-select
-    class="chip-select"
-    aria-label="Category"
-    interface="popover"
-    [value]="selectedCategory"
-    toggleIcon="chevron-down"
-    (ionChange)="categoryChange.emit($event.detail.value)"
-  >
-    @for (c of categories; track c.value) {
-      <ion-select-option [value]="c.value">{{ c.label }}</ion-select-option>
-    }
-  </ion-select>
-
-  <button class="chip pdf" (click)="exportPdf.emit()">
+  <button type="button" class="chip pdf" (click)="exportPdf.emit()">
     <ion-icon name="download-outline"></ion-icon>
     PDF
   </button>
 </div>
 
-@if (isRange) {
-  <div class="row range">
-    <label
-      >From
-      <input
-        class="chip-date"
-        type="date"
-        [value]="dateFrom"
-        [attr.max]="dateTo || null"
-        (change)="onFrom($any($event.target).value)"
-      />
-    </label>
-    <label
-      >To
-      <input
-        class="chip-date"
-        type="date"
-        [value]="dateTo"
-        [attr.min]="dateFrom || null"
-        (change)="onTo($any($event.target).value)"
-      />
-    </label>
-    <button type="button" class="clear" (click)="clearRange()">Clear</button>
-  </div>
+@if (!open && summary) {
+  <p class="summary">{{ summary }}</p>
 }
+
+<div id="filter-panel" class="panel" [class.open]="open" [attr.inert]="open ? null : ''">
+  <div class="panel-inner">
+    <div class="row">
+      @for (a of accounts; track a.id) {
+        <button type="button" class="chip" [class.on]="a.id === selectedAccountId" (click)="accountChange.emit(a.id)">
+          {{ a.name }}
+        </button>
+      }
+    </div>
+
+    <div class="row">
+      <ion-select class="chip-select" aria-label="Month" interface="popover" toggleIcon="chevron-down"
+                  [value]="selectedMonth" (ionChange)="monthChange.emit($event.detail.value)">
+        @for (m of months; track m.value) {
+          <ion-select-option [value]="m.value">{{ m.label }}</ion-select-option>
+        }
+      </ion-select>
+
+      <ion-select class="chip-select" aria-label="Category" interface="popover" toggleIcon="chevron-down"
+                  [value]="selectedCategory" (ionChange)="categoryChange.emit($event.detail.value)">
+        @for (c of categories; track c.value) {
+          <ion-select-option [value]="c.value">{{ c.label }}</ion-select-option>
+        }
+      </ion-select>
+    </div>
+
+    @if (isRange) {
+      <div class="row range">
+        <label>From
+          <input class="chip-date" type="date" [value]="dateFrom" [attr.max]="dateTo || null"
+                 (change)="onFrom($any($event.target).value)">
+        </label>
+        <label>To
+          <input class="chip-date" type="date" [value]="dateTo" [attr.min]="dateFrom || null"
+                 (change)="onTo($any($event.target).value)">
+        </label>
+        <button type="button" class="clear" (click)="clearRange()">Clear dates</button>
+      </div>
+    }
+
+    @if (activeCount > 0) {
+      <div class="row">
+        <button type="button" class="clear" (click)="clearFilters.emit()">Clear all filters</button>
+      </div>
+    }
+  </div>
+</div>

@@ -213,6 +213,15 @@ export class TransactionPage implements OnInit {
     this.reload();
   }
 
+  onClearFilters() {
+  this.selectedAccountId = null;
+  this.selectedMonth = 'all';      
+  this.selectedCategory = 'all';
+  this.dateFrom = '';
+  this.dateTo = '';
+  this.reload();
+}
+
   private reload() {
     const range = this.selectedMonth === 'range';
     return this.transactionService.load({
