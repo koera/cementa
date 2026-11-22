@@ -28,6 +28,7 @@ const RED = '#B42318';
 const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EUR' });
 const eur = (cents: number) => money.format(Math.abs(cents) / 100);
 const signed = (cents: number) => `${cents < 0 ? '−' : '+'}${eur(cents)}`;
+const eurSigned = (cents: number) => `${cents < 0 ? '−' : ''}${eur(cents)}`;
 const day = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
@@ -126,9 +127,10 @@ export class PdfReportService {
       right(eur(accOpening(a))),
       right(eur(a.income ?? 0)),
       right(eur(a.expenses ?? 0)),
-      right(eur(a.balance)),
+      right(eurSigned(a.balance), { bold: a.balance < 0, color: a.balance < 0 ? RED : INK }),
     ]);
     const total = (f: (a: AccountBalance) => number) => accounts.reduce((s, a) => s + f(a), 0);
+    const totalRemaining = total(a => a.balance);
 
     // ---- transactions (filtered list)
     const txnRows = transactions.length
@@ -247,7 +249,7 @@ export class PdfReportService {
                 right(eur(total(accOpening)), { bold: true }),
                 right(eur(total((a) => a.income ?? 0)), { bold: true }),
                 right(eur(total((a) => a.expenses ?? 0)), { bold: true }),
-                right(eur(total((a) => a.balance)), { bold: true }),
+                right(eurSigned(totalRemaining), { bold: true, color: totalRemaining < 0 ? RED : INK }),
               ],
             ],
           },
